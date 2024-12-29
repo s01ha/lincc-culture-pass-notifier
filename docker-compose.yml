@@ -1,0 +1,22 @@
+services:
+  selenium:
+    container_name: lincc-culture-pass-notifier-selenium
+    image: selenium/standalone-chrome:latest
+    shm_size: 2gb
+    environment:
+      - 'TZ=US/Pacific'
+  app:
+    container_name: lincc-culture-pass-notifier
+    build: ./app
+    image: python-cron:latest
+    restart: unless-stopped
+    depends_on:
+      - selenium    
+    environment:
+      - 'TZ=US/Pacific'
+      - 'SELENIUM_HOST=${SELENIUM_HOST}'
+      - 'SELENIUM_PORT=${SELENIUM_PORT}'
+      - 'BARCODE=${BARCODE}'
+      - 'PIN=${PIN}'
+      - 'BOT_TOKEN=${BOT_TOKEN}'
+      - 'CHAT_ID=${CHAT_ID}'
